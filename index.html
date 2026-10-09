@@ -7,7 +7,9 @@
   <title>NOVA AI 客服體驗</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html, body {
       margin: 0;
@@ -135,9 +137,17 @@
       transition: background 0.2s, transform 0.1s;
     }
 
-    .option-button:last-child { margin-bottom: 0; }
-    .option-button:hover { background: #dbeafe; }
-    .option-button:active { transform: scale(0.99); }
+    .option-button:last-child {
+      margin-bottom: 0;
+    }
+
+    .option-button:hover {
+      background: #dbeafe;
+    }
+
+    .option-button:active {
+      transform: scale(0.99);
+    }
 
     .main-button {
       width: 100%;
@@ -150,10 +160,14 @@
       cursor: pointer;
     }
 
-    .main-button:hover { background: #1d4ed8; }
+    .main-button:hover {
+      background: #1d4ed8;
+    }
 
     @media (max-width: 500px) {
-      body { align-items: stretch; }
+      body {
+        align-items: stretch;
+      }
 
       .chat-container {
         width: 100vw;
@@ -167,7 +181,9 @@
         padding: calc(14px + env(safe-area-inset-top)) 16px 14px;
       }
 
-      .chat-box { padding: 15px; }
+      .chat-box {
+        padding: 15px;
+      }
 
       .controls {
         padding: 9px 11px calc(9px + env(safe-area-inset-bottom));
@@ -185,8 +201,12 @@
   <div class="chat-container">
 
     <div class="chat-header">
-      <div class="chat-title">NOVA 購物 AI 客服</div>
-      <div class="status">● 線上</div>
+      <div class="chat-title">
+        NOVA 購物 AI 客服
+      </div>
+      <div class="status">
+        ● 線上
+      </div>
     </div>
 
     <div class="chat-box" id="chatBox">
@@ -211,25 +231,32 @@
   </div>
 
   <script>
+
     const chatBox = document.getElementById("chatBox");
     const controls = document.getElementById("controls");
 
+    // 顯示聊天訊息
     function addMessage(text, sender) {
       const message = document.createElement("div");
+
       message.classList.add("message", sender);
       message.innerHTML = text;
+
       chatBox.appendChild(message);
       scrollToBottom();
     }
 
+    // 自動捲動到最新訊息
     function scrollToBottom() {
       setTimeout(() => {
         chatBox.scrollTop = chatBox.scrollHeight;
       }, 50);
     }
 
+    // 模擬 AI 正在輸入
     function showTyping(callback, delay = 1100) {
       const typing = document.createElement("div");
+
       typing.className = "typing";
       typing.innerText = "AI 客服正在輸入⋯⋯";
 
@@ -242,11 +269,13 @@
       }, delay);
     }
 
+    // 顯示使用者選項
     function showOptions(options) {
       controls.innerHTML = "";
 
       options.forEach(option => {
         const button = document.createElement("button");
+
         button.className = "option-button";
         button.innerText = option.text;
 
@@ -260,8 +289,14 @@
       });
     }
 
-    // 低溫暖 AI 客服對話：四次使用者選擇
+    // =====================================
+    // 高溫暖 AI 客服：四階段互動
+    // 每一階段有三個不同選項
+    // =====================================
+
     const dialogueStages = [
+
+      // 第一階段：顧客反映配送異常
       {
         options: [
           "我的包裹物流三天沒更新了",
@@ -270,17 +305,18 @@
         ],
 
         responses: [
-          "已收到您的物流查詢需求，現在進行配送紀錄查詢。",
+          "真的很抱歉讓您等了這麼久 😟 物流一直沒更新，一定會讓人擔心。我現在就幫您仔細確認。",
 
-          "已收到逾期未送達的問題回報，現在查詢物流紀錄。",
+          "原本期待昨天收到商品，卻遲遲沒送到，真的很不好意思 😔 我馬上幫您查詢原因。",
 
-          "已收到包裹狀態查詢需求，現在確認配送情況。"
+          "當然可以！一直等不到包裹的消息難免會著急，我現在就幫您確認配送狀況 😊"
         ],
 
         common:
           "查詢結果顯示：包裹目前仍在轉運中心。由於轉運站的資料同步異常，物流資訊已連續三天沒有更新，目前也沒有顯示包裹遺失的紀錄。"
       },
 
+      // 第二階段：顧客詢問異常原因
       {
         options: [
           "為什麼物流資訊會異常？",
@@ -289,16 +325,17 @@
         ],
 
         responses: [
-          "轉運站發生資料同步異常，導致物流資訊未能正常更新。",
+          "讓您一直看不到配送進度，真的很抱歉 😔 這次是轉運站的資料同步異常，造成物流資訊無法正常更新。",
 
-          "目前系統沒有顯示包裹遺失紀錄，配送結果仍以後續物流更新為準。",
+          "我理解您會擔心包裹是不是不見了 😟 目前系統沒有顯示遺失紀錄，不過還是需要留意後續配送更新喔。",
 
-          "目前最後一筆物流紀錄顯示，包裹位於轉運中心，尚無新的配送節點。"
+          "讓您久等了！😊 目前紀錄顯示包裹仍在轉運中心，尚未出現新的配送節點。"
         ],
 
         common: ""
       },
 
+      // 第三階段：顧客詢問配送及處理方式
       {
         options: [
           "那大概什麼時候能送到？",
@@ -307,17 +344,18 @@
         ],
 
         responses: [
-          "物流端目前尚未提供可確認的送達時間。",
+          "我知道您一定很希望趕快收到商品 😔 很抱歉，現在還沒有辦法提供確切的送達時間。",
 
-          "系統可向物流端提交催促配送請求。",
+          "當然可以！😊 我知道您已經等了好幾天，真的很不好意思，會協助提出催促配送請求。",
 
-          "若兩天後仍未收到商品，可再次聯繫客服確認配送紀錄。"
+          "如果過了兩天還是沒收到，一定會更讓人擔心 😟 您可以再聯繫我們，我們會協助繼續查詢。"
         ],
 
         common:
           "目前已向物流端提出配送查詢及催促配送請求，但仍無法確認確切的到貨時間。您可以透過訂單頁面查看後續進度；若兩天後仍未收到，也可以再次聯繫客服。"
       },
 
+      // 第四階段：顧客確認並結束服務
       {
         options: [
           "了解，我會再留意訂單資訊",
@@ -326,17 +364,22 @@
         ],
 
         responses: [
-          "請依訂單頁面所顯示的物流資訊確認後續進度。",
+          "謝謝您願意再等等！這次真的讓您費心了，希望很快就能有新的物流消息 😊",
 
-          "本次配送紀錄查詢已完成。",
+          "不客氣，也謝謝您的耐心 😊 很抱歉這次配送狀況造成困擾，希望商品能早點送到您手上。",
 
-          "後續配送進度將以物流端更新為準。"
+          "我也希望您能儘快收到商品！再次為這次的延遲向您致歉，祝您今天順心 😊"
         ],
 
         common:
           "最新配送狀態可於 NOVA 訂單頁面查看；如果後續仍有配送問題，歡迎再次聯繫客服。"
       }
+
     ];
+
+    // =====================================
+    // 開始聊天
+    // =====================================
 
     function startChat() {
       chatBox.innerHTML = "";
@@ -344,13 +387,17 @@
 
       showTyping(() => {
         addMessage(
-          "您好，我是 NOVA 購物 AI 客服，請問今天需要什麼協助？",
+          "您好，我是 NOVA 購物 AI 客服 😊 請問今天需要什麼協助？",
           "bot"
         );
 
         showStage(0);
       });
     }
+
+    // =====================================
+    // 顯示各階段選項
+    // =====================================
 
     function showStage(stageIndex) {
       const stage = dialogueStages[stageIndex];
@@ -362,6 +409,10 @@
         }))
       );
     }
+
+    // =====================================
+    // 根據使用者選擇產生對應回覆
+    // =====================================
 
     function handleSelection(stageIndex, optionIndex) {
       const stage = dialogueStages[stageIndex];
@@ -383,10 +434,15 @@
       });
     }
 
+    // =====================================
+    // 完成體驗按鈕
+    // =====================================
+
     function showFinishButton() {
       controls.innerHTML = "";
 
       const button = document.createElement("button");
+
       button.className = "main-button";
       button.innerText = "完成體驗並填寫問卷";
       button.onclick = goSurvey;
@@ -394,11 +450,16 @@
       controls.appendChild(button);
     }
 
-    // 低溫暖組問卷
+    // =====================================
+    // 高溫暖組 Google Forms 問卷
+    // =====================================
+
     function goSurvey() {
       window.location.href =
-        "https://docs.google.com/forms/d/e/1FAIpQLSfKtHphpZ-wYKsT0nX5nVbYbPdwm5Xmk_ztVl2BEtiKE74axw/viewform?usp=pp_url";
+        "https://docs.google.com/forms/d/e/1FAIpQLSfUverPHBiXx42ISZBVG4Y-naJHGmubLGY1cUoqfIgo2WHzJQ/viewform?usp=pp_url";
     }
+
   </script>
+
 </body>
 </html>
